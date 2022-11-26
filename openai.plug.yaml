@@ -27,3 +27,7 @@ functions:
     path: "./openaiPlug.ts:imageGeneration"
     command:
       name: "OpenAI: Image Generation"
+  editSelection:
+    path: "./openaiPlug.ts:editSelection"
+    command:
+      name: "OpenAI: Edit Selection"

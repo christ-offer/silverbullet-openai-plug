@@ -1,7 +1,7 @@
 import { editor } from "$sb/silverbullet-syscall/mod.ts";
-import { OpenAI } from "./lib/openai.ts";
 import { readYamlPage } from "$sb/lib/yaml_page.ts";
 import { readSecrets } from "$sb/lib/secrets_page.ts";
+import { OpenAI } from "https://deno.land/x/openai_mini@0.2.0/mod.ts";
 
 export async function getKeys() {
   try {
@@ -87,4 +87,18 @@ export async function imageGeneration() {
   const response = await openai.createImage(request.imageGeneration);
 
   editor.insertAtPos(response.data[0].url, selection.to);
+}
+
+export async function editSelection() {
+  const selectedText = await editor.getText()
+  const selection = await editor.getSelection()
+  const prompt = selectedText.slice(selection.from, selection.to)
+  const request = await readSettings();
+  request.edit.prompt = prompt;
+  console.log(request.edit)
+  const apiKey = await getKeys();
+  const openai = new OpenAI(apiKey);
+  const response = await openai.createEdit(request.edit);
+  
+  editor.insertAtPos(response.choices[0].text, selection.to)
 }

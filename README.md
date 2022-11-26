@@ -49,6 +49,10 @@ The current commands are:
   - Creates a completion based on the full content of the current page
 - OpenAI: Selection Completion
   - Creates a completion based on the selected text
+- OpenAI: Image Generation
+  - Creates an image based on the selected text
+- OpenAI: Edit Selection
+  - Edits the selected text based on the instruction in the settings page
 
 ## Wait, SilverBullet?
 
