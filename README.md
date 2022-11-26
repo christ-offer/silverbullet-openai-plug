@@ -41,7 +41,7 @@ imageGeneration:
 ```
 
 It uses a OpenAI Library/Wrapper I made myself. You can find it here:
-https://codeberg.org/pyotrgrowpotkin/deno-openai
+https://deno.land/x/openai_mini/
 
 The current commands are:
 
