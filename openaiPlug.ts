@@ -1,46 +1,51 @@
-import { editor, space } from "$sb/silverbullet-syscall/mod.ts";
+import { editor } from "$sb/silverbullet-syscall/mod.ts";
 import { OpenAIApi } from "./lib/openai.ts";
+import { readYamlPage } from "$sb/lib/yaml_page.ts";
+import { readSecrets } from "$sb/lib/secrets_page.ts";
+
+
+export async function getKeys() {
+  try {
+  const [token] = await readSecrets(["openai"]);
+  return token;
+} catch {
+  console.error("No openai token found");
+}
+}
+
+export async function readSettings() {
+  try {
+    const allSettings = await readYamlPage("openai/settings");
+    return allSettings;
+}
+  catch (e) {
+    console.log(e);
+    return [];
+  }
+}
 
 export async function fullTextCompletion() {
-  const apiKey = await space.readPage('/openai/settings')
-  const openai = new OpenAIApi(apiKey);
+  const request = await readSettings();
   const prompt = await editor.getText();
-  const response = await openai.createCodeCompletion({
-    model: "code-davinci-002",
-    prompt,
-    max_tokens: 100,
-    temperature: 0.7,
-    top_p: 1,
-    n: 1,
-    stream: false,
-    logprobs: null,
-    stop: "",
-  });
-  
-  const choice = response.choices[0];
-  const text = choice.text;
-  editor.insertAtCursor(text);
+  request.prompt = prompt;
+  console.log(request)
+  const apiKey = await getKeys();
+  const openai = new OpenAIApi(apiKey);
+  const response = await openai.createCodeCompletion(request);
+
+  editor.insertAtCursor(response.choices[0].text);
 }
 
 export async function selectionCompletion() {
-  const apiKey = await space.readPage('/openai/settings')
-  const selection = await editor.getSelection()
   const selectedText = await editor.getText()
+  const selection = await editor.getSelection()
   const prompt = selectedText.slice(selection.from, selection.to)
+  const request = await readSettings();
+  request.prompt = prompt;
+  console.log(request)
+  const apiKey = await getKeys();
   const openai = new OpenAIApi(apiKey);
-  const response = await openai.createCodeCompletion({
-    model: "code-davinci-002",
-    prompt,
-    max_tokens: 100,
-    temperature: 0.7,
-    top_p: 1,
-    n: 1,
-    stream: false,
-    logprobs: null,
-    stop: "",
-  });
+  const response = await openai.createCodeCompletion(request);
   
-  const choice = response.choices[0];
-  const text = choice.text;
-  editor.insertAtCursor(text);
+  editor.insertAtPos(response.choices[0].text, selection.to)
 }

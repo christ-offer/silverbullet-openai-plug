@@ -1,15 +1,39 @@
 # SilverBullet plug for OpenAI Completions
 
-Currently does two things, completions based on the full page or completions
-based on selection.
+Warning: Do not use other than on localhost. There is no encryption or any
+security in place at all.
 
-The commands are:
+For this to work you will have to create a page called `SECRETS`. And create a
+yaml codeblock that looks like this:
+
+```yaml
+openai: your-key-here
+```
+
+You will also need to specify the model/engine settings in a page called
+`openai/settings`
+
+Example:
+
+```yaml
+model: code-davinci-002
+max_tokens: 400
+temperature: 0
+top_p: 1
+n: 1
+stream: false
+logprobs: null
+stop: ""
+```
+
+It uses a OpenAI Library/Wrapper I made myself. You can find it here:
+
+The current commands are:
 
 - OpenAI: Full Page Completion
+  - Creates a completion based on the full content of the current page
 - OpenAI: Selection Completion
-
-To set up your API Key, create a page at /openai/settings and put only the api
-key there.
+  - Creates a completion based on the selected text
 
 ## Wait, SilverBullet?
 

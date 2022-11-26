@@ -3,11 +3,15 @@ version: 0.1
 imports:
   - https://get.silverbullet.md/global.plug.json
 functions:
-  helloWorld:
+  fullTextCompletion:
     path: "./openaiPlug.ts:fullTextCompletion"
     command:
       name: "OpenAI: Full Page Completion"
-  test:
+  selectionCompletion:
     path: "./openaiPlug.ts:selectionCompletion"
     command:
       name: "OpenAI: Selection Completion"
+  readSettings:
+    path: "./openaiPlug.ts:readSettings"
+    command:
+      name: "OpenAI: Settings"
