@@ -11,22 +11,37 @@ openai: your-key-here
 ```
 
 You will also need to specify the model/engine settings in a page called
-`openai/settings`
-
-Example:
+`openai/settings` and create a yaml codeblock that looks like this:
 
 ```yaml
-model: code-davinci-002
-max_tokens: 400
-temperature: 0
-top_p: 1
-n: 1
-stream: false
-logprobs: null
-stop: ""
+codeCompletion:
+  model: code-davinci-002
+  max_tokens: 200
+  temperature: 1
+  top_p: 1
+  n: 1
+  stream: false
+  logprobs: null
+  stop: ""
+completion:
+  model: text-davinci-002
+  max_tokens: 200
+  temperature: 0.7
+  top_p: 1
+  n: 1
+  stream: false
+  logprobs: null
+  stop: ""
+edit:
+  model: text-edit-davinci-001
+  instruction: "Fix any spelling mistake"
+imageGeneration:
+  n: 1
+  size: "1024x1024"
 ```
 
 It uses a OpenAI Library/Wrapper I made myself. You can find it here:
+https://codeberg.org/pyotrgrowpotkin/deno-openai
 
 The current commands are:
 
