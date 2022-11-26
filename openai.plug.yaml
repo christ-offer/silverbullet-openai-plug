@@ -1,0 +1,13 @@
+name: code-completion
+version: 0.1
+imports:
+  - https://get.silverbullet.md/global.plug.json
+functions:
+  helloWorld:
+    path: "./openaiPlug.ts:fullTextCompletion"
+    command:
+      name: "OpenAI: Full Page Completion"
+  test:
+    path: "./openaiPlug.ts:selectionCompletion"
+    command:
+      name: "OpenAI: Selection Completion"
