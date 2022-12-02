@@ -9,6 +9,7 @@ export async function getKeys() {
   return token;
 } catch {
   console.error("No openai token found");
+  editor.flashNotification(`SECRETS page missing, or OpenAI API token not configured correctly.`, "error");
 }
 }
 
@@ -19,6 +20,7 @@ export async function readSettings() {
 }
   catch (e) {
     console.log(e);
+    editor.flashNotification(`Settings page missing, or settings not configured correctly.`, "error");
     return [];
   }
 }
@@ -28,11 +30,18 @@ export async function fullPageCodeCompletion() {
   const prompt = await editor.getText();
   request.codeCompletion.prompt = prompt;
   console.log(request.codeCompletion)
-  const apiKey = await getKeys();
-  const openai = new OpenAI(apiKey);
-  const response = await openai.createCompletion(request.codeCompletion);
-
-  editor.insertAtCursor(response.choices[0].text);
+  try {
+    const apiKey = await getKeys();
+    const openai = new OpenAI(apiKey);
+    editor.flashNotification("Generating completion...", "info");
+    const response = await openai.createCompletion(request.codeCompletion);
+    editor.insertAtCursor(response.choices[0].text);
+  }
+  catch (err) {
+    console.log(err);
+    editor.flashNotification(`Something went wrong`, "error");
+  }
+  editor.flashNotification(`Generation complete`, "info");
 }
 
 export async function selectionCodeCompletion() {
@@ -42,11 +51,18 @@ export async function selectionCodeCompletion() {
   const request = await readSettings();
   request.codeCompletion.prompt = prompt;
   console.log(request.codeCompletion)
-  const apiKey = await getKeys();
-  const openai = new OpenAI(apiKey);
-  const response = await openai.createCompletion(request.codeCompletion);
-  
-  editor.insertAtPos(response.choices[0].text, selection.to)
+  try {
+    const apiKey = await getKeys();
+    const openai = new OpenAI(apiKey);
+    editor.flashNotification("Generating completion...", "info");
+    const response = await openai.createCompletion(request.codeCompletion);
+    editor.insertAtPos(response.choices[0].text, selection.to)
+  }
+  catch (err) {
+    console.log(err);
+    editor.flashNotification(`Something went wrong`, "error");
+  }
+  editor.flashNotification(`Generation complete`, "info");
 }
 
 export async function fullPageCompletion() {
@@ -54,11 +70,18 @@ export async function fullPageCompletion() {
   const prompt = await editor.getText();
   request.completion.prompt = prompt;
   console.log(request.completion)
-  const apiKey = await getKeys();
-  const openai = new OpenAI(apiKey);
-  const response = await openai.createCompletion(request.completion);
-
-  editor.insertAtCursor(response.choices[0].text);
+  try {
+    const apiKey = await getKeys();
+    const openai = new OpenAI(apiKey);
+    editor.flashNotification("Generating completion...", "info");
+    const response = await openai.createCompletion(request.completion);
+    editor.insertAtCursor(response.choices[0].text);
+  }
+  catch (err) {
+    console.log(err);
+    editor.flashNotification(`Something went wrong`, "error");
+  }
+  editor.flashNotification(`Generation complete`, "info");
 }
 
 export async function selectionCompletion() {
@@ -68,11 +91,18 @@ export async function selectionCompletion() {
   const request = await readSettings();
   request.completion.prompt = prompt;
   console.log(request.completion)
-  const apiKey = await getKeys();
-  const openai = new OpenAI(apiKey);
-  const response = await openai.createCompletion(request.completion);
-  
-  editor.insertAtPos(response.choices[0].text, selection.to)
+  try {
+    const apiKey = await getKeys();
+    const openai = new OpenAI(apiKey);
+    editor.flashNotification("Generating completion...", "info");
+    const response = await openai.createCompletion(request.completion);
+    editor.insertAtPos(response.choices[0].text, selection.to)
+  }
+  catch (err) {
+    console.log(err);
+    editor.flashNotification(`Something went wrong`, "error");
+  }
+  editor.flashNotification(`Generation complete`, "info");
 }
 
 export async function imageGeneration() {
@@ -82,11 +112,18 @@ export async function imageGeneration() {
   const prompt = selectedText.slice(selection.from, selection.to)
   request.imageGeneration.prompt = prompt;
   console.log(request.imageGeneration)
-  const apiKey = await getKeys();
-  const openai = new OpenAI(apiKey);
-  const response = await openai.createImage(request.imageGeneration);
-
-  editor.insertAtPos(response.data[0].url, selection.to);
+  editor.flashNotification("Generating image...", "info");
+  try {
+    const apiKey = await getKeys();
+    const openai = new OpenAI(apiKey);
+    const response = await openai.createImage(request.imageGeneration);
+    editor.insertAtPos(`![${prompt}](${response.data[0].url})`, selection.to);
+  }
+  catch (err) {
+    console.log(err);
+    editor.flashNotification(`Something went wrong`, "error");
+  }
+  editor.flashNotification(`Generation complete`, "info");
 }
 
 export async function editSelection() {
@@ -96,9 +133,16 @@ export async function editSelection() {
   const request = await readSettings();
   request.edit.prompt = prompt;
   console.log(request.edit)
-  const apiKey = await getKeys();
-  const openai = new OpenAI(apiKey);
-  const response = await openai.createEdit(request.edit);
-  
-  editor.insertAtPos(response.choices[0].text, selection.to)
+  try {
+    const apiKey = await getKeys();
+    const openai = new OpenAI(apiKey);
+    editor.flashNotification("Generating edit...", "info");
+    const response = await openai.createEdit(request.edit);
+    editor.insertAtPos(response.choices[0].text, selection.to)
+  }
+  catch (err) {
+    console.log(err);
+    editor.flashNotification(`Something went wrong`, "error");
+  }
+  editor.flashNotification(`Generation complete`, "info");
 }
