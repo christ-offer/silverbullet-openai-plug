@@ -131,7 +131,7 @@ export async function editSelection() {
   const selection = await editor.getSelection()
   const prompt = selectedText.slice(selection.from, selection.to)
   const request = await readSettings();
-  request.edit.prompt = prompt;
+  request.edit.input = prompt;
   console.log(request.edit)
   try {
     const apiKey = await getKeys();
